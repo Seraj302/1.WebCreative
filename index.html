@@ -899,32 +899,80 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            html, body {
+                overflow-x: hidden;
+            }
+
+            /* Menyn följer inte med när man skrollar */
             nav {
-                flex-wrap: wrap;
-                gap: 0;
+                position: relative;
+                backdrop-filter: none;
             }
 
+            /* Liten pil som alltid finns uppe till höger */
             .menu-toggle {
-                display: block;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: fixed;
+                top: 12px;
+                right: 12px;
+                z-index: 300;
+                width: 44px;
+                height: 44px;
+                padding: 0;
+                border-radius: 50%;
+                background-color: rgba(26, 35, 50, 0.9);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+                font-size: 1.1rem;
+                transition: transform 0.3s ease;
             }
 
-            nav ul,
+            nav.open .menu-toggle {
+                transform: rotate(180deg);
+            }
+
+            /* Menyn glider ner över sidan och gömmer sig helt igen */
+            nav ul {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 200;
+                flex-direction: column;
+                gap: 1.2rem;
+                text-align: center;
+                padding: 4.5rem 5% 5.5rem;
+                background-color: rgba(26, 35, 50, 0.97);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border-light);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+                transform: translateY(-100%);
+                visibility: hidden;
+                transition: transform 0.3s ease, visibility 0.3s;
+            }
+
             nav > .cta-button {
-                display: none;
+                position: fixed;
+                left: 5%;
+                right: 5%;
+                width: auto;
+                top: 0;
+                z-index: 201;
+                transform: translateY(-200%);
+                visibility: hidden;
+                transition: transform 0.3s ease, visibility 0.3s;
             }
 
             nav.open ul {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-                width: 100%;
-                padding: 1rem 0;
+                transform: translateY(0);
+                visibility: visible;
             }
 
             nav.open > .cta-button {
-                display: block;
-                margin-bottom: 0.5rem;
+                transform: translateY(calc(var(--menu-height, 360px) - 4.5rem));
+                visibility: visible;
             }
 
             .hero {
@@ -961,7 +1009,7 @@
     <!-- Navigation -->
     <nav>
         <div class="logo">WebCreative</div>
-        <button class="menu-toggle" aria-label="Öppna meny" aria-expanded="false">&#9776;</button>
+        <button class="menu-toggle" aria-label="Öppna meny" aria-expanded="false">&#9660;</button>
         <ul>
             <li><a href="#hem">Hem</a></li>
             <li><a href="#tjänster">Tjänster</a></li>
@@ -1487,12 +1535,13 @@
         const menuToggle = nav.querySelector('.menu-toggle');
         function setMenu(open) {
             nav.classList.toggle('open', open);
-            menuToggle.innerHTML = open ? '&#10005;' : '&#9776;';
+            if (open) nav.style.setProperty('--menu-height', nav.querySelector('ul').offsetHeight + 'px');
             menuToggle.setAttribute('aria-expanded', open);
             menuToggle.setAttribute('aria-label', open ? 'Stäng meny' : 'Öppna meny');
         }
         menuToggle.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
         nav.querySelectorAll('ul a, .cta-button').forEach(el => el.addEventListener('click', () => setMenu(false)));
+        document.addEventListener('click', e => { if (!nav.contains(e.target)) setMenu(false); });
 
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId);
