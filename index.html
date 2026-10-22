@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebCreative - Modern Webdesign för Ditt Företag</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #0f1419;
+            --secondary-dark: #1a2332;
+            --accent-orange: #ff6b35;
+            --accent-light: #ffa500;
+            --text-light: #ffffff;
+            --text-gray: #a0a8b8;
+            --text-muted: #7a8290;
+            --border-light: #2a3244;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background-color: var(--primary-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: rgba(26, 35, 50, 0.7);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-orange);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background-color: var(--accent-orange);
+            color: var(--primary-dark);
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.25);
+        }
+
+        .cta-button:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6rem 5%;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            right: -250px;
+            top: -250px;
+        }
+
+        .hero-content {
+            flex: 1;
+            z-index: 2;
+            max-width: 650px;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-gray);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .secondary-button {
+            border: 2px solid var(--accent-orange);
+            color: var(--accent-orange);
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: transparent;
+            cursor: pointer;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .secondary-button:hover {
+            background-color: var(--accent-orange);
+            color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: right;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 20px 40px rgba(255, 107, 53, 0.2));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 5%;
+            background-color: var(--secondary-dark);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.8rem;
+            color: var(--accent-orange);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3.5rem;
+            color: var(--text-light);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-light));
+            border-radius: 2px;
+        }
+
+        /* Services Section */
+        .services {
+            padding: 5rem;
+            background-color: var(--primary-dark);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background-color: var(--secondary-dark);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            border-left: 3px solid var(--accent-orange);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(255, 107, 53, 0.2);
+            border-left-color: var(--accent-light);
+            border-color: rgba(255, 107, 53, 0.2);
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            line-height: 1.75;
+            font-size: 0.95rem;
+        }
+
+        /* Process Section */
+        .process {
+            padding: 5rem;
+            background-color: var(--secondary-dark);
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .process-item {
+            background-color: var(--primary-dark);
+            padding: 2.5rem 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .process-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: var(--accent-orange);
+            color: var(--primary-dark);
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .process-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .process-item p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            padding: 5rem;
+            background-color: var(--primary-dark);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background-color: var(--secondary-dark);
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--accent-orange);
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.25);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, transparent 100%);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+            font-weight: 700;
+        }
+
+        .price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .price-period {
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .features-list {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .features-list li {
+            list-style: none;
+            padding: 0.5rem 0;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .features-list li:before {
+            content: '✓';
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 5rem;
+            background-color: var(--secondary-dark);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background-color: var(--primary-dark);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .testimonial-stars {
+            color: var(--accent-orange);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .testimonial-company {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 5rem;
+            background-color: var(--primary-dark);
+        }
+
+        .faq-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background-color: var(--secondary-dark);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background-color: var(--secondary-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: rgba(255, 107, 53, 0.1);
+        }
+
+        .faq-toggle {
+            color: var(--accent-orange);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 5rem;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            padding: 5rem;
+            background-color: var(--secondary-dark);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .portfolio-item {
+            background-color: var(--primary-dark);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .portfolio-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .portfolio-info {
+            padding: 1.5rem;
+        }
+
+        .portfolio-info h3 {
+            color: var(--accent-orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .portfolio-info p {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(15, 20, 25, 0.8);
+            border-top: 1px solid var(--border-light);
+            padding: 3rem 5%;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--accent-orange);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .footer-section p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-light);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-dark);
+            padding: 3rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 800px;
+            width: 95%;
+            max-height: 95vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--text-light);
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--accent-orange);
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.95rem;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            background-color: rgba(15, 20, 25, 0.5);
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            background-color: rgba(15, 20, 25, 0.8);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-group.has-error input,
+        .form-group.has-error textarea {
+            border-color: #ff6b6b !important;
+            background-color: rgba(255, 107, 107, 0.05);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .modal-buttons button {
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn {
+            background-color: var(--accent-orange);
+            color: var(--primary-dark);
+        }
+
+        .submit-btn:hover {
+            background-color: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            background-color: transparent;
+            border: 2px solid var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .cancel-btn:hover {
+            background-color: var(--accent-orange);
+            color: var(--primary-dark);
+        }
+
+        .success-message {
+            display: none;
+            background-color: rgba(16, 185, 129, 0.2);
+            border: 2px solid var(--success);
+            color: var(--success);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .hero {
+                flex-direction: column;
+                padding: 2rem;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .services, .pricing, .portfolio, .contact, .process, .testimonials, .faq, .cta-section {
+                padding: 2rem;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .cta-button, .secondary-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">WebCreative</div>
+        <ul>
+            <li><a href="#hem">Hem</a></li>
+            <li><a href="#tjänster">Tjänster</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#priser">Priser</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <button class="cta-button" onclick="scrollToSection('priser')">Kom Igång</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hem">
+        <div class="hero-content">
+            <h1>Moderna Hemsidor för Din Verksamhet</h1>
+            <p>Vi skapar vackra, funktionella och moderna hemsidor som växer tillsammans med ditt företag. Från litet startups till större organisationer – vi har lösningen för dig.</p>
+            <div class="hero-buttons">
+                <button class="cta-button" onclick="scrollToSection('priser')">Starta Projekt</button>
+                <button class="secondary-button" onclick="scrollToSection('portfolio')">Se Exempel</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div style="font-size: 100px; opacity: 0.3;">🚀</div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>150+</h3>
+                <p>Nöjda Kunder</p>
+            </div>
+            <div class="stat-item">
+                <h3>250+</h3>
+                <p>Projekt Slutförda</p>
+            </div>
+            <div class="stat-item">
+                <h3>8 År</h3>
+                <p>Erfarenhet</p>
+            </div>
+            <div class="stat-item">
+                <h3>98%</h3>
+                <p>Kundnöjdhet</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="tjänster">
+        <h2 class="section-title">Våra Tjänster</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>🎨 Webdesign</h3>
+                <p>Vi designar moderna, användarcentrerade hemsidor som är vackra och lätta att använda. Varje pixel är genomtänkt.</p>
+            </div>
+            <div class="service-card">
+                <h3>💻 Webbutveckling</h3>
+                <p>Från enkel HTML till avancerade webbapplikationer. Vi bygger snabba, säkra och skalbar lösningar.</p>
+            </div>
+            <div class="service-card">
+                <h3>📱 Responsiv Design</h3>
+                <p>Dina hemsidor fungerar perfekt på alla enheter – dator, surfplatta och mobil. Garanterat.</p>
+            </div>
+            <div class="service-card">
+                <h3>🔍 SEO Optimering</h3>
+                <p>Vi optimerar din hemsida för sökmotorer så att dina kunder hittar dig när de söker.</p>
+            </div>
+            <div class="service-card">
+                <h3>⚡ Prestanda</h3>
+                <p>Snabba hemsidor som laddar blixtsabbt. Det är viktigt för användarupplevelse och ranking.</p>
+            </div>
+            <div class="service-card">
+                <h3>🛠️ Underhåll & Support</h3>
+                <p>Vi är här för dig efter lansering. Uppdateringar, bugfixar och ny funktionalitet när du behöver det.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process" id="process">
+        <h2 class="section-title">Hur Vi Jobbar</h2>
+        <div class="process-grid">
+            <div class="process-item">
+                <div class="process-number">1</div>
+                <h3>Konsultation</h3>
+                <p>Vi lyssnar på dina behov och förstår dina mål för hemsidan innan vi börjar.</p>
+            </div>
+            <div class="process-item">
+                <div class="process-number">2</div>
+                <h3>Design & Planering</h3>
+                <p>Vi skapar en detaljerad design och struktur som passar din verksamhet perfekt.</p>
+            </div>
+            <div class="process-item">
+                <div class="process-number">3</div>
+                <h3>Utveckling</h3>
+                <p>Vi bygger hemsidan med senaste teknologi och best practices för prestanda.</p>
+            </div>
+            <div class="process-item">
+                <div class="process-number">4</div>
+                <h3>Testning</h3>
+                <p>Vi testar noggrant på alla enheter och webbläsare för att säkerställa kvalitet.</p>
+            </div>
+            <div class="process-item">
+                <div class="process-number">5</div>
+                <h3>Lansering</h3>
+                <p>Vi lanserar din hemsida och säkerställer allt fungerar perfekt på servern.</p>
+            </div>
+            <div class="process-item">
+                <div class="process-number">6</div>
+                <h3>Support & Underhåll</h3>
+                <p>Vi är här för dig med löpande support och uppdateringar efter lansering.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="priser">
+        <h2 class="section-title">Prisplaner</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card" data-package="Basis">
+                <h3>Basis</h3>
+                <div class="price">5.000 kr</div>
+                <div class="price-period">engångspris</div>
+                <ul class="features-list">
+                    <li>Enkel hemsida (3-5 sidor)</li>
+                    <li>Responsiv design</li>
+                    <li>Kontaktformulär</li>
+                    <li>Grundläggande SEO</li>
+                    <li>6 månad hosting</li>
+                </ul>
+                <button class="secondary-button" onclick="openModal('Basis', 5000)">Välj Plan</button>
+            </div>
+            <div class="pricing-card" data-package="Startup">
+                <h3>Startup</h3>
+                <div class="price">9.000 kr</div>
+                <div class="price-period">engångspris</div>
+                <ul class="features-list">
+                    <li>Professionell hemsida (5-10 sidor)</li>
+                    <li>Modern design & animationer</li>
+                    <li>Kontaktformulär & Newsletter</li>
+                    <li>SEO Optimering</li>
+                    <li>1 år hosting + domän</li>
+                    <li>1 gratis uppdatering</li>
+                </ul>
+                <button class="secondary-button" onclick="openModal('Startup', 9000)">Välj Plan</button>
+            </div>
+            <div class="pricing-card featured" data-package="Professional">
+                <h3>Professional</h3>
+                <div class="price">13.000 kr</div>
+                <div class="price-period">engångspris</div>
+                <ul class="features-list">
+                    <li>Avancerad hemsida (10-20 sidor)</li>
+                    <li>Skräddarsydd design</li>
+                    <li>CMS System (lätt att uppdatera)</li>
+                    <li>SEO Optimering</li>
+                    <li>2 år hosting + domän</li>
+                    <li>3 gratis uppdateringar/år</li>
+                    <li>Email support</li>
+                </ul>
+                <button class="cta-button" onclick="openModal('Professional', 13000)">Välj Plan</button>
+            </div>
+            <div class="pricing-card" data-package="Enterprise">
+                <h3>Enterprise</h3>
+                <div class="price">22.000 kr</div>
+                <div class="price-period">engångspris</div>
+                <ul class="features-list">
+                    <li>Helt anpassad lösning</li>
+                    <li>E-handel integration</li>
+                    <li>Avancerad funktionalitet</li>
+                    <li>Premium SEO & Analytics</li>
+                    <li>3 år hosting + domän</li>
+                    <li>Månatlig underhåll</li>
+                    <li>Prioriterad support</li>
+                    <li>Dedikerad kontakt</li>
+                </ul>
+                <button class="secondary-button" onclick="openModal('Enterprise', 22000)">Kontakta Oss</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <h2 class="section-title">Vad Våra Kunder Säger</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <div class="testimonial-text">"WebCreative gjorde en fantastisk hemsida för oss. De förstod precis vad vi behövde och levererade långt över förväntningarna. Högt rekommenderat!"</div>
+                <div class="testimonial-author">Anna Svensson</div>
+                <div class="testimonial-company">Svenssons E-handel</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <div class="testimonial-text">"Professionella, snabba och enkla att jobba med. Vår hemsida ser fantastisk ut och vi får redan fler besökare. Tack WebCreative!"</div>
+                <div class="testimonial-author">Per Andersson</div>
+                <div class="testimonial-company">Anderssons Konsultbyrå</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <div class="testimonial-text">"Bästa investeringen vi gjort för vår verksamhet. Hemsidan är snabb, snygg och vi får dagligen nya kunder genom den."</div>
+                <div class="testimonial-author">Maria Johansson</div>
+                <div class="testimonial-company">Johanssons Restaurang</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio" id="portfolio">
+        <h2 class="section-title">Senaste Projekt</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item">
+                <div class="portfolio-image">🏪</div>
+                <div class="portfolio-info">
+                    <h3>WebShop E-handel</h3>
+                    <p>Modern e-handelsplats för liten butik</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-image">🏢</div>
+                <div class="portfolio-info">
+                    <h3>Företagsportfolio</h3>
+                    <p>Professionell hemsida för konsultföretag</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-image">🎓</div>
+                <div class="portfolio-info">
+                    <h3>Utbildningsplattform</h3>
+                    <p>Interaktiv lärningsplattform med kurser</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-image">🍽️</div>
+                <div class="portfolio-info">
+                    <h3>Restaurang Hemsida</h3>
+                    <p>Meny, bokning och underhållande design</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-image">💼</div>
+                <div class="portfolio-info">
+                    <h3>Konsultbyrå</h3>
+                    <p>Exklusiv hemsida med case-studier</p>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <div class="portfolio-image">🏥</div>
+                <div class="portfolio-info">
+                    <h3>Tandläkarpraktik</h3>
+                    <p>Professionell hemsida med bokningssystem</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <h2 class="section-title">Vanliga Frågor</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Hur lång tid tar det att bygga en hemsida?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    Det beror på omfattningen av projektet. En enkel hemsida tar 2-3 veckor, medan en mer avancerad kan ta 4-6 veckor. Vi diskuterar tidsplanen under konsultationen.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Vilken kunskap behöver jag för att uppdatera hemsidan själv?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    Det beror på vilken typ av system du väljer. Med ett CMS-system (som WordPress) behöver du minimal teknisk kunskap. Vi instruerar dig noggrant och ger löpande support.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Är hemsidan mobile-responsiv?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    Ja! Alla hemsidor vi skapar är helt responsiva och fungerar perfekt på mobiler, surfplattor och datorer. Det är en grundläggande standard i allt vi gör.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Ingår hosting i priserna?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    Ja! Hosting ingår i alla paket. Längden på hosting varierar: Basis får 6 månader, Startup 1 år, Professional 2 år och Enterprise 3 år.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    <span>Vad gör ni för SEO?</span>
+                    <div class="faq-toggle">+</div>
+                </div>
+                <div class="faq-answer">
+                    Vi optimerar hemsidan för sökmotorer genom korrekt HTML-struktur, snabb laddtid, relevanta nyckelord och meta-taggar. Vi siktar på att din hemsida rankar väl på Google.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Redo att Starta Ditt Nästa Projekt?</h2>
+        <p>Vi hjälper dig att bygga en hemsida som verkligen fungerar och genererar resultat för din verksamhet.</p>
+        <button class="cta-button" onclick="scrollToSection('priser')">Beställ Nu</button>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Om WebCreative</h4>
+                <p>Vi är ett dedikerat team av webdesigners och utvecklare som älskar att skapa vackra, funktionella hemsidor som växer tillsammans med ditt företag.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Tjänster</h4>
+                <ul>
+                    <li><a href="#" style="color: inherit; text-decoration: none;">Webdesign</a></li>
+                    <li><a href="#" style="color: inherit; text-decoration: none;">Webbutveckling</a></li>
+                    <li><a href="#" style="color: inherit; text-decoration: none;">SEO Optimering</a></li>
+                    <li><a href="#" style="color: inherit; text-decoration: none;">Underhåll & Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Kontakt</h4>
+                <p>📧 info@webcreative.se</p>
+                <p>📱 070-123 45 67</p>
+                <p>📍 Halmstad, Sverige</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 WebCreative. Alla rättigheter förbehållna. | Skapat med ❤️ för ditt nästa projekt.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="packageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Beställ <span id="modalPackageName"></span></h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✅ Tack! Vi har mottagit din beställning och kontaktar dig inom 24 timmar!
+            </div>
+
+            <form id="packageForm" onsubmit="submitForm(event)">
+                <h3 style="color: var(--text-light); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">Grundläggande Information</h3>
+                
+                <div class="form-group">
+                    <label for="customerName">Ditt namn *</label>
+                    <input type="text" id="customerName" placeholder="Ex. Johan Andersson" required>
+                    <div class="error-message" id="error-customerName">Du måste fylla i ditt namn</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-post *</label>
+                    <input type="email" id="email" placeholder="din@epost.se" required>
+                    <div class="error-message" id="error-email">Du måste fylla i en giltig e-postadress</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefonnummer *</label>
+                    <input type="tel" id="phone" placeholder="070-123 45 67" required>
+                    <div class="error-message" id="error-phone">Du måste fylla i ett telefonnummer</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="company">Företagsnamn *</label>
+                    <input type="text" id="company" placeholder="Ex. Min Butik AB" required>
+                    <div class="error-message" id="error-company">Du måste fylla i företagsnamn</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="companyType">Företagstyp *</label>
+                    <select id="companyType" required>
+                        <option value="">-- Välj --</option>
+                        <option value="Enskild firma">Enskild firma</option>
+                        <option value="AB">AB (Aktiebolag)</option>
+                        <option value="Ideell organisation">Ideell organisation</option>
+                        <option value="Privatperson">Privatperson</option>
+                        <option value="Övrigt">Övrigt</option>
+                    </select>
+                    <div class="error-message" id="error-companyType">Du måste välja företagstyp</div>
+                </div>
+
+                <h3 style="color: var(--text-light); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">Hemsidans Syfte & Mål</h3>
+
+                <div class="form-group">
+                    <label for="websitePurpose">Vad är syftet med din hemsida? *</label>
+                    <select id="websitePurpose" required>
+                        <option value="">-- Välj --</option>
+                        <option value="Presentera företaget">Presentera företaget</option>
+                        <option value="Sälja produkter/tjänster">Sälja produkter/tjänster</option>
+                        <option value="Samla leads/kontakter">Samla leads/kontakter</option>
+                        <option value="Blogga/innehållsdelning">Blogga/innehållsdelning</option>
+                        <option value="E-commerce">E-commerce butik</option>
+                        <option value="Bokning/reservering">Bokning/reservering</option>
+                        <option value="Övrigt">Övrigt</option>
+                    </select>
+                    <div class="error-message" id="error-websitePurpose">Du måste välja syfte</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="mainGoals">Vad är dina huvudmål med hemsidan? *</label>
+                    <textarea id="mainGoals" placeholder="Ex. Få fler kunder, öka försäljning, bygga varumärkesimage..." required></textarea>
+                    <div class="error-message" id="error-mainGoals">Du måste beskriva dina mål</div>
+                </div>
+
+                <h3 style="color: var(--text-light); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">Målgrupp & Innehål</h3>
+
+                <div class="form-group">
+                    <label for="targetAudience">Vem är din målgrupp? *</label>
+                    <textarea id="targetAudience" placeholder="Ex. Kvinnor 25-45 år, företagare, privatpersoner..." required></textarea>
+                    <div class="error-message" id="error-targetAudience">Du måste beskriva din målgrupp</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contentNeeds">Vilka sidor/innehål ska hemsidan innehålla? *</label>
+                    <textarea id="contentNeeds" placeholder="Ex. Hem, om oss, tjänster, blog, kontakt, portfolio..." required></textarea>
+                    <div class="error-message" id="error-contentNeeds">Du måste beskriva önskat innehål</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="requiredFeatures">Vilka funktioner behöver du? *</label>
+                    <textarea id="requiredFeatures" placeholder="Ex. Kontaktformulär, nyhetsbrev, bokningssystem, chat, betalning..." required></textarea>
+                    <div class="error-message" id="error-requiredFeatures">Du måste beskriva funktioner du behöver</div>
+                </div>
+
+                <h3 style="color: var(--text-light); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">Design & Preferenser</h3>
+
+                <div class="form-group">
+                    <label for="designStyle">Vilken designstil föredrar du? *</label>
+                    <select id="designStyle" required>
+                        <option value="">-- Välj --</option>
+                        <option value="Modern & minimalistisk">Modern & minimalistisk</option>
+                        <option value="Färgrik & lekfull">Färgrik & lekfull</option>
+                        <option value="Klassisk & professionell">Klassisk & professionell</option>
+                        <option value="Konstnärlig & kreativ">Konstnärlig & kreativ</option>
+                        <option value="Vill ha förslag">Vill ha förslag</option>
+                    </select>
+                    <div class="error-message" id="error-designStyle">Du måste välja designstil</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inspiration">Har du inspirerande hemsidor/exempel? (URL)</label>
+                    <textarea id="inspiration" placeholder="Länka till hemsidor du gillar eller beskrivningar..."></textarea>
+                </div>
+
+                <h3 style="color: var(--text-light); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">Tekniska Krav</h3>
+
+                <div class="form-group">
+                    <label for="cmsNeeds">Behöver du kunna uppdatera hemsidan själv? *</label>
+                    <select id="cmsNeeds" required>
+                        <option value="">-- Välj --</option>
+                        <option value="Ja, enkelt CMS">Ja, enkelt CMS (WordPress mm)</option>
+                        <option value="Ja, avancerat">Ja, avancerat system</option>
+                        <option value="Nej, du uppdaterar">Nej, du uppdaterar åt mig</option>
+                    </select>
+                    <div class="error-message" id="error-cmsNeeds">Du måste välja</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="seoImportance">Hur viktigt är SEO (att synas på Google)? *</label>
+                    <select id="seoImportance" required>
+                        <option value="">-- Välj --</option>
+                        <option value="Mycket viktigt">Mycket viktigt</option>
+                        <option value="Ganska viktigt">Ganska viktigt</option>
+                        <option value="Mindre viktigt">Mindre viktigt</option>
+                    </select>
+                    <div class="error-message" id="error-seoImportance">Du måste välja</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ecommerceNeeds">Behöver du e-commerce/betalningslösning? *</label>
+                    <select id="ecommerceNeeds" required>
+                        <option value="">-- Välj --</option>
+                        <option value="Ja, helt butik">Ja, helt butik</option>
+                        <option value="Ja, enkel försäljning">Ja, enkel försäljning</option>
+                        <option value="Nej">Nej</option>
+                    </select>
+                    <div class="error-message" id="error-ecommerceNeeds">Du måste välja</div>
+                </div>
+
+                <h3 style="color: var(--text-light); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">Tidsplan & Övrigt</h3>
+
+                <div class="form-group">
+                    <label for="timeline">Hur snabbt behöver du hemsidan? *</label>
+                    <select id="timeline" required>
+                        <option value="">-- Välj --</option>
+                        <option value="Omedelbar">Omedelbar (asap)</option>
+                        <option value="1-2 veckor">1-2 veckor</option>
+                        <option value="1 månad">1 månad</option>
+                        <option value="Flexibelt">Flexibelt</option>
+                    </select>
+                    <div class="error-message" id="error-timeline">Du måste välja tidsplan</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">Något annat vi bör veta?</label>
+                    <textarea id="additionalInfo" placeholder="Budgetgräns, speciella krav, omärkta önskemål..."></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Avbryt</button>
+                    <button type="submit" class="submit-btn">Skicka Beställning</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function openModal(packageName, price) {
+            document.querySelectorAll('.pricing-card').forEach(card => {
+                card.classList.remove('featured');
+            });
+
+            const selectedCard = document.querySelector(`[data-package="${packageName}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('featured');
+            }
+
+            document.getElementById('modalPackageName').textContent = packageName;
+            document.getElementById('packageModal').classList.add('active');
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('packageForm').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('packageModal').classList.remove('active');
+            document.getElementById('packageForm').reset();
+        }
+
+        function submitForm(e) {
+            e.preventDefault();
+            document.getElementById('packageForm').style.display = 'none';
+            document.getElementById('successMessage').classList.add('show');
+
+            const formData = {
+                name: document.getElementById('customerName').value,
+                email: document.getElementById('email').value,
+                company: document.getElementById('company').value,
+                phone: document.getElementById('phone').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date().toLocaleString('sv-SE')
+            };
+
+            console.log('Beställning:', formData);
+
+            let orders = JSON.parse(localStorage.getItem('webCreativeOrders')) || [];
+            orders.push(formData);
+            localStorage.setItem('webCreativeOrders', JSON.stringify(orders));
+
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            faqItem.classList.toggle('active');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('packageModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
