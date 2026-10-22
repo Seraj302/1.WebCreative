@@ -1413,7 +1413,10 @@
             }
         }
 
+        let selectedPrice = 0;
+
         function openModal(packageName, price) {
+            selectedPrice = price;
             document.querySelectorAll('.pricing-card').forEach(card => {
                 card.classList.remove('featured');
             });
@@ -1443,11 +1446,12 @@
             const val = id => (document.getElementById(id) || {}).value || '';
 
             const formData = {
-                _subject: 'Ny beställning: ' + document.getElementById('modalPackageName').textContent + ' – ' + val('customerName'),
+                _subject: '🛒 Nytt köp: ' + document.getElementById('modalPackageName').textContent + ' (' + selectedPrice.toLocaleString('sv-SE') + ' kr) – ' + val('customerName'),
                 _replyto: val('email'),
                 _template: 'table',
                 _captcha: 'false',
                 Paket: document.getElementById('modalPackageName').textContent,
+                Pris: selectedPrice.toLocaleString('sv-SE') + ' kr',
                 Namn: val('customerName'),
                 'E-post': val('email'),
                 Telefon: val('phone'),
