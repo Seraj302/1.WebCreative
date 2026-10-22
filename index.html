@@ -1612,13 +1612,20 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Skickar...';
 
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 12000);
+
             try {
                 const res = await fetch('https://formsubmit.co/ajax/' + ORDER_EMAIL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify(formData)
+                    body: JSON.stringify(formData),
+                    signal: controller.signal
                 });
-                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok || String(data.success) !== 'true') {
+                    throw new Error(data.message || 'HTTP ' + res.status);
+                }
 
                 form.style.display = 'none';
                 document.getElementById('successMessage').classList.add('show');
@@ -1627,8 +1634,18 @@
                 }, 3000);
             } catch (err) {
                 console.error('Kunde inte skicka beställningen:', err);
-                alert('Något gick fel när beställningen skulle skickas. Mejla oss gärna direkt på ' + ORDER_EMAIL);
+                // Reserv: öppna kundens mejlprogram med beställningen ifylld så att den ändå kommer fram
+                const body = Object.entries(formData)
+                    .filter(([key, value]) => !key.startsWith('_') && value)
+                    .map(([key, value]) => key + ': ' + value)
+                    .join('\n');
+                if (confirm('Beställningen kunde inte skickas just nu. Vill du skicka den via ditt mejlprogram i stället? Allt du fyllt i är redan ifyllt.')) {
+                    window.location.href = 'mailto:' + ORDER_EMAIL +
+                        '?subject=' + encodeURIComponent(formData._subject) +
+                        '&body=' + encodeURIComponent(body);
+                }
             } finally {
+                clearTimeout(timeout);
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Skicka Beställning';
             }
