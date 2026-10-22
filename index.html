@@ -1218,7 +1218,7 @@
             </div>
             <div class="footer-section">
                 <h4>Kontakt</h4>
-                <p>📧 info@webcreative.se</p>
+                <p>📧 <a href="mailto:design@webcreative.app" style="color: inherit; text-decoration: none;">design@webcreative.app</a></p>
                 <p>📱 070-123 45 67</p>
                 <p>📍 Halmstad, Sverige</p>
             </div>
@@ -1434,29 +1434,63 @@
             document.getElementById('packageForm').reset();
         }
 
-        function submitForm(e) {
+        const ORDER_EMAIL = 'design@webcreative.app';
+
+        async function submitForm(e) {
             e.preventDefault();
-            document.getElementById('packageForm').style.display = 'none';
-            document.getElementById('successMessage').classList.add('show');
+            const form = document.getElementById('packageForm');
+            const submitBtn = form.querySelector('.submit-btn');
+            const val = id => (document.getElementById(id) || {}).value || '';
 
             const formData = {
-                name: document.getElementById('customerName').value,
-                email: document.getElementById('email').value,
-                company: document.getElementById('company').value,
-                phone: document.getElementById('phone').value,
-                message: document.getElementById('message').value,
-                timestamp: new Date().toLocaleString('sv-SE')
+                _subject: 'Ny beställning: ' + document.getElementById('modalPackageName').textContent + ' – ' + val('customerName'),
+                _replyto: val('email'),
+                _template: 'table',
+                _captcha: 'false',
+                Paket: document.getElementById('modalPackageName').textContent,
+                Namn: val('customerName'),
+                'E-post': val('email'),
+                Telefon: val('phone'),
+                Företag: val('company'),
+                Företagstyp: val('companyType'),
+                'Syfte med hemsidan': val('websitePurpose'),
+                Mål: val('mainGoals'),
+                Målgrupp: val('targetAudience'),
+                Innehåll: val('contentNeeds'),
+                Funktioner: val('requiredFeatures'),
+                Designstil: val('designStyle'),
+                Inspiration: val('inspiration'),
+                CMS: val('cmsNeeds'),
+                SEO: val('seoImportance'),
+                'E-handel': val('ecommerceNeeds'),
+                Tidsplan: val('timeline'),
+                Övrigt: val('additionalInfo'),
+                Tidpunkt: new Date().toLocaleString('sv-SE')
             };
 
-            console.log('Beställning:', formData);
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Skickar...';
 
-            let orders = JSON.parse(localStorage.getItem('webCreativeOrders')) || [];
-            orders.push(formData);
-            localStorage.setItem('webCreativeOrders', JSON.stringify(orders));
+            try {
+                const res = await fetch('https://formsubmit.co/ajax/' + ORDER_EMAIL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
 
-            setTimeout(() => {
-                closeModal();
-            }, 3000);
+                form.style.display = 'none';
+                document.getElementById('successMessage').classList.add('show');
+                setTimeout(() => {
+                    closeModal();
+                }, 3000);
+            } catch (err) {
+                console.error('Kunde inte skicka beställningen:', err);
+                alert('Något gick fel när beställningen skulle skickas. Mejla oss gärna direkt på ' + ORDER_EMAIL);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Skicka Beställning';
+            }
         }
 
         function toggleFAQ(element) {
