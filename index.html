@@ -897,6 +897,40 @@
             display: block;
         }
 
+        .payment-step {
+            display: none;
+            text-align: center;
+        }
+
+        .payment-step.show {
+            display: block;
+        }
+
+        .payment-step h3 {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-step p {
+            color: var(--text-gray);
+            margin-bottom: 1.25rem;
+        }
+
+        #paypalButtons {
+            max-width: 400px;
+            margin: 0 auto 1rem auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 1rem 1rem 0.25rem 1rem;
+        }
+
+        .payment-step .cancel-btn {
+            padding: 0.85rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             html, body {
@@ -1364,6 +1398,18 @@
                 ✅ Tack! Vi har mottagit din beställning och kontaktar dig inom 24 timmar!
             </div>
 
+            <div class="payment-step" id="paymentStep">
+                <h3>Betala <span id="paymentAmount"></span> nu</h3>
+                <p>Betala tryggt med PayPal eller kort. Du behöver inget PayPal-konto för att betala med kort.</p>
+                <div id="paypalButtons"></div>
+                <p>Vill du hellre betala senare? Då skickar vi en faktura till dig.</p>
+                <button type="button" class="cancel-btn" onclick="closeModal()">Betala senare</button>
+            </div>
+
+            <div class="success-message" id="paidMessage">
+                ✅ Tack! Din betalning är klar. Vi har skickat ett kvitto till din e-post och kontaktar dig inom 24 timmar.
+            </div>
+
             <form id="packageForm" onsubmit="submitForm(event)">
                 <h3 style="color: var(--text-light); margin: 1.5rem 0 1rem 0; font-size: 1.1rem;">Grundläggande Information</h3>
                 
@@ -1566,6 +1612,8 @@
             document.getElementById('modalPackageName').textContent = packageName;
             document.getElementById('packageModal').classList.add('active');
             document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('paymentStep').classList.remove('show');
+            document.getElementById('paidMessage').classList.remove('show');
             document.getElementById('packageForm').style.display = 'block';
         }
 
@@ -1575,6 +1623,87 @@
         }
 
         const ORDER_EMAIL = 'design@webcreative.app';
+
+        // PayPal: klistra in ditt Client ID (Live) från developer.paypal.com här.
+        // Så länge det är tomt visas ingen betalning, bara beställningsformuläret som förut.
+        const PAYPAL_CLIENT_ID = '';
+        let paypalSdk = null;
+
+        function loadPayPal() {
+            if (!paypalSdk) {
+                paypalSdk = new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(PAYPAL_CLIENT_ID) +
+                        '&currency=SEK&intent=capture&locale=sv_SE';
+                    script.onload = () => resolve(window.paypal);
+                    script.onerror = () => { paypalSdk = null; reject(new Error('PayPal kunde inte laddas')); };
+                    document.head.appendChild(script);
+                });
+            }
+            return paypalSdk;
+        }
+
+        function sendOrderEmail(data) {
+            return fetch('https://formsubmit.co/ajax/' + ORDER_EMAIL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+
+        async function showPayment(order) {
+            document.getElementById('paymentAmount').textContent = order.Pris;
+            document.getElementById('paymentStep').classList.add('show');
+            document.querySelector('#packageModal .modal-content').scrollTop = 0;
+            const container = document.getElementById('paypalButtons');
+            container.innerHTML = '';
+            try {
+                const paypal = await loadPayPal();
+                await paypal.Buttons({
+                    style: { layout: 'vertical', label: 'pay' },
+                    createOrder: (data, actions) => actions.order.create({
+                        purchase_units: [{
+                            description: 'WebCreative ' + order.Paket + '-paket',
+                            amount: { currency_code: 'SEK', value: String(order.belopp) }
+                        }],
+                        application_context: { shipping_preference: 'NO_SHIPPING' }
+                    }),
+                    onApprove: async (data, actions) => {
+                        const details = await actions.order.capture();
+                        const capture = details.purchase_units[0].payments.captures[0];
+                        const paid = capture.amount.value + ' ' + capture.amount.currency_code;
+                        document.getElementById('successMessage').classList.remove('show');
+                        document.getElementById('paymentStep').classList.remove('show');
+                        document.getElementById('paidMessage').classList.add('show');
+                        // Kontrollera alltid i ditt PayPal-konto att pengarna faktiskt kommit in
+                        await sendOrderEmail({
+                            _subject: '💰 Betalning mottagen: ' + order.Paket + ' (' + paid + ') – ' + order.Namn,
+                            _replyto: order['E-post'],
+                            _template: 'table',
+                            _captcha: 'false',
+                            Betalning: capture.status === 'COMPLETED' ? 'Betald via PayPal' : 'Status: ' + capture.status,
+                            'Betalt belopp': paid,
+                            'Förväntat belopp': order.Pris,
+                            'PayPal transaktions-ID': capture.id,
+                            'Betalarens PayPal-mejl': (details.payer && details.payer.email_address) || '',
+                            Paket: order.Paket,
+                            Namn: order.Namn,
+                            'E-post': order['E-post'],
+                            Telefon: order.Telefon,
+                            Företag: order.Företag,
+                            Tidpunkt: new Date().toLocaleString('sv-SE')
+                        }).catch(err => console.error('Kunde inte skicka betalningsmejlet:', err));
+                    },
+                    onError: err => {
+                        console.error('PayPal-fel:', err);
+                        alert('Betalningen gick inte igenom. Försök igen, eller välj "Betala senare" så skickar vi en faktura.');
+                    }
+                }).render('#paypalButtons');
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<p style="color:#0f1419">PayPal kunde inte laddas just nu. Välj "Betala senare" så skickar vi en faktura.</p>';
+            }
+        }
 
         async function submitForm(e) {
             e.preventDefault();
@@ -1608,6 +1737,7 @@
                 Övrigt: val('additionalInfo'),
                 Tidpunkt: new Date().toLocaleString('sv-SE')
             };
+            if (PAYPAL_CLIENT_ID) formData.Betalning = 'Inte betald än (kunden fick välja PayPal eller faktura)';
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Skickar...';
@@ -1629,9 +1759,13 @@
 
                 form.style.display = 'none';
                 document.getElementById('successMessage').classList.add('show');
-                setTimeout(() => {
-                    closeModal();
-                }, 3000);
+                if (PAYPAL_CLIENT_ID) {
+                    showPayment({ ...formData, belopp: selectedPrice });
+                } else {
+                    setTimeout(() => {
+                        closeModal();
+                    }, 3000);
+                }
             } catch (err) {
                 console.error('Kunde inte skicka beställningen:', err);
                 // Reserv: öppna kundens mejlprogram med beställningen ifylld så att den ändå kommer fram
